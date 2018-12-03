@@ -6,19 +6,23 @@ import mysql.connector as mc
 
 app  = Flask(__name__)
 
-@app.route('/home')
+@app.route('/login')
+def westworld_home():
     symbol = get_symbol()
-    buyprice = get_buyprice()
-    sellprice = get_sellprice()
-    spotprice = get_spotprice()
-    initial_balance = 0
-    balance = initial_balance
-    return render_template('main.html')
+    return render_template('login.html')
+
+@app.route('/')
+def westworld_main():
+    btcspotprice = get_btc_spotprice()
+    btcspotprice = get_btc_spotprice()
+    btcspotprice = get_btc_spotprice()
+
+    return render_template('main.html',stuff=btcspotprice)
 
 @app.route('/ordersummary')
 def view_ordersummary():
     connection = get_connection()
-    sql = "select * from symbol,trade where symbol.symbol_id = trade.product_id"
+    sql = "select * from symbol,trade where symbol.symbol_id = trade.symbol_id"
     result = connection.cmd_query(sql)
     rows = connection.get_rows()
     connection.close()
@@ -35,16 +39,28 @@ def view_ledger():
     connection.close()
     return render_template('ledger.html', ledgers=rows[0])
 
-def trade(side, price, current_balance):
+@app.route('/process',methods=['POST'])
+def process_order():
+    qty = request.form['qty']
+    product = request.form['itemOrdered']
+    connection = get_connection()
+    sql = 'insert into trade (qty,symbol_id) values ('+qty+','+product+')'
+    # i.e insert into orders (quantity, product_id) values (8000,2)
+    result = connection.cmd_query(sql)
+    connection.commit()
+    connection.close()
+    return "Order processed"
+
+#def trade(side, price, current_balance):
   ## Buy = True, Sell = False
-    transaction = str(current_balance)+","+str(side)+","+str(price)
-     if side:
-        current_balance = current_balance - price
-     else:
-        current_balance = current_balance + price
-    transaction = transaction + "," + str(current_balance) + '\n'
-    ledger.write(transaction)
-    return current_balance
+#    transaction = str(current_balance)+","+str(side)+","+str(price)
+#     if side:
+#        current_balance = current_balance - price
+#     else:
+#        current_balance = current_balance + price
+#    transaction = transaction + "," + str(current_balance) + '\n'
+#    ledger.write(transaction)
+#    return current_balance
 
 def get_connection():
     return mc.connect(user='root',
@@ -60,28 +76,56 @@ def get_symbol():
     connection.close()
     return rows[0]
 
-def get_buyprice():
+# get buy price
+def get_btc_buyprice():
     client = Client('apibuy', 'secretbuy')
     buy_btc = client.get_buy_price(currency_pair = 'BTC-USD')
+    return buy_btc
+
+def get_eth_buyprice():
+    client = Client('apibuy', 'secretbuy')
     buy_eth = client.get_buy_price(currency_pair = 'ETH-USD')
+    return buy_eth
+
+def get_ltc_buyprice():
+    client = Client('apibuy', 'secretbuy')
     buy_ltc = client.get_buy_price(currency_pair = 'LTC-USD')
-    return buy_btc, buy_eth, buy_ltc
-    
-def get_sellprice():
+    return buy_ltc
+
+# get sell price
+def get_btc_sellprice():
     client = Client('apisell', 'secretsell')
-    sell_btc = client.get_sell_price(currency_pair = 'BTC-USD')
+    sell_btc = client.get_sell_price(currency_pair = 'BTC-USD') 
+    return sell_btc
+
+def get_eth_sellprice():
+    client = Client('apisell', 'secretsell')
     sell_eth = client.get_sell_price(currency_pair = 'ETH-USD')
+    return sell_eth
+
+def get_ltc_sellprice():
+    client = Client('apisell', 'secretsell')
     sell_ltc = client.get_sell_price(currency_pair = 'LTC-USD')
-    return sell_btc, sell_eth, sell_ltc
+    return sell_ltc
 
-
-def get_spotprice():
+# get spot price
+def get_btc_spotprice():
     client = Client('apispot', 'secretspot')
     spot_btc = client.get_spot_price(currency_pair = 'BTC-USD')
-    spot_eth = client.get_spot_price(currency_pair = 'ETH-USD')
-    spot_ltc = client.get_spot_price(currency_pair = 'LTC-USD')
-    return spot_btc, spot_eth, spot_ltc
+    return spot_btc
 
+def get_eth_spotprice():
+    client = Client('apispot', 'secretspot')
+    spot_eth = client.get_spot_price(currency_pair = 'ETH-USD')
+    return spot_eth
+
+def get_ltc_spotprice():
+    client = Client('apispot', 'secretspot')
+    spot_ltc = client.get_spot_price(currency_pair = 'LTC-USD')
+    return spot_ltc
+
+if __name__ == "__main__":
+  app.run(debug=True)
     
 
 
