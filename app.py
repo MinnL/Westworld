@@ -74,6 +74,7 @@ def get_sellprice():
     sell_ltc = client.get_sell_price(currency_pair = 'LTC-USD')
     return sell_btc, sell_eth, sell_ltc
 
+
 def get_spotprice():
     client = Client('apispot', 'secretspot')
     spot_btc = client.get_spot_price(currency_pair = 'BTC-USD')
