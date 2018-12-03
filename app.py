@@ -11,16 +11,40 @@ app  = Flask(__name__)
     buyprice = get_buyprice()
     sellprice = get_sellprice()
     spotprice = get_spotprice()
-    
+    initial_balance = 0
+    balance = initial_balance
+    return render_template('main.html')
 
-    return render_template('main.html', symbol=)
+@app.route('/ordersummary')
+def view_ordersummary():
+    connection = get_connection()
+    sql = "select * from symbol,trade where symbol.symbol_id = trade.product_id"
+    result = connection.cmd_query(sql)
+    rows = connection.get_rows()
+    connection.close()
+    return render_template('ordersummary.html', ordersummary=rows[0])
 
-@app.route('/order summary')
+@app.route('/graphs')
 
-@app.route('graphs')
+@app.route('/ledger')
+def view_ledger():
+    connection = get_connection()
+    sql = "select * from symbol,trade where symbol.symbol_id = trade.product_id"
+    result = connection.cmd_query(sql)
+    rows = connection.get_rows()
+    connection.close()
+    return render_template('ledger.html', ledgers=rows[0])
 
-@app.route('ledger')
-
+def trade(side, price, current_balance):
+  ## Buy = True, Sell = False
+    transaction = str(current_balance)+","+str(side)+","+str(price)
+     if side:
+        current_balance = current_balance - price
+     else:
+        current_balance = current_balance + price
+    transaction = transaction + "," + str(current_balance) + '\n'
+    ledger.write(transaction)
+    return current_balance
 
 def get_connection():
     return mc.connect(user='root',
