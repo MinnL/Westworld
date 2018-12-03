@@ -25,7 +25,8 @@ create table profit_loss(
     qty int,
     VWAP decimal (12,2),
     RPL  decimal (12,2),
-    URPL decimal (12,2)
+    URPL decimal (12,2),
+    time timestamp
 );
 
 insert into symbol values (1,'BIT'),(2,'ETH'),(3,'LTC')
