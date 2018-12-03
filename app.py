@@ -14,10 +14,9 @@ def westworld_home():
 @app.route('/')
 def westworld_main():
     btcspotprice = get_btc_spotprice()
-    btcspotprice = get_btc_spotprice()
-    btcspotprice = get_btc_spotprice()
-
-    return render_template('main.html',stuff=btcspotprice)
+    ethspotprice = get_eth_spotprice()
+    ltcspotprice = get_ltc_spotprice()
+    return render_template('main.html',stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
 
 @app.route('/ordersummary')
 def view_ordersummary():
