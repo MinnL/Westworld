@@ -11,7 +11,9 @@ create table trade (
     action varchar(4),
     qty int,
     price decimal(12,2),
-    time timestamp  
+    time timestamp,
+    inventory int not null,
+    cash decimal(12,2)
 );
 
 create table symbol (
