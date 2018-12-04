@@ -1,5 +1,5 @@
 #VWAP
-currenty_qty = 0
+current_qty = 0
 current_VWAP = 0
 make_order = True
 while make_order:
