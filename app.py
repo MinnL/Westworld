@@ -32,7 +32,7 @@ def view_ordersummary():
 @app.route('/ledger')
 def view_ledger():
     connection = get_connection()
-    sql = "select * from symbol,trade where symbol.symbol_id = trade.product_id"
+    sql = "select * from symbol,trade where symbol.symbol_id = trade.symbol_id"
     result = connection.cmd_query(sql)
     rows = connection.get_rows()
     connection.close()
