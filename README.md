@@ -3,6 +3,7 @@ crypto currency trading system
 
 Please type in the following in commend line:
 pip3 install coinbase
+pip install plotly
 
 Please type in the following in MYSQl to create a database and tables. 
 
