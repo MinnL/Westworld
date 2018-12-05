@@ -7,25 +7,18 @@ import mysql.connector as mc
 app  = Flask(__name__)
 
 @app.route('/login')
-def westworld_home():
-    symbol = get_symbol()
+def login():
     return render_template('login.html')
+
+
 
 @app.route('/')
 def westworld_main():
+    symbol = get_symbol()
     btcspotprice = get_btc_spotprice()
     ethspotprice = get_eth_spotprice()
     ltcspotprice = get_ltc_spotprice()
-    return render_template('main.html',stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
-
-@app.route('/ordersummary')
-def view_ordersummary():
-    connection = get_connection()
-    sql = "select * from symbol,trade where symbol.symbol_id = trade.symbol_id"
-    result = connection.cmd_query(sql)
-    rows = connection.get_rows()
-    connection.close()
-    return render_template('ordersummary.html', ordersummary=rows[0])
+    return render_template('main.html',stuff=symbol, stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
 
 @app.route('/graphs')
 
@@ -38,17 +31,17 @@ def view_ledger():
     connection.close()
     return render_template('ledger.html', ledgers=rows[0])
 
-@app.route('/process',methods=['POST'])
+@app.route('/ordersummary',methods=['POST'])
 def process_order():
     qty = request.form['qty']
-    product = request.form['itemOrdered']
+    symbol = request.form['itemOrdered']
     connection = get_connection()
     sql = 'insert into trade (qty,symbol_id) values ('+qty+','+product+')'
     # i.e insert into orders (quantity, product_id) values (8000,2)
     result = connection.cmd_query(sql)
     connection.commit()
     connection.close()
-    return "Order processed"
+    return render_template('ordersummary.html')
 
 #def trade(side, price, current_balance):
   ## Buy = True, Sell = False
