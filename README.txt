@@ -17,7 +17,7 @@ create table trade (
     price decimal(12,2),
     time timestamp,
     inventory int,
-    cash decimal(12,2),
+    balance decimal(12,2),
     primary key(trade_id) 
 );
 
