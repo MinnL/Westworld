@@ -54,7 +54,7 @@ def process_order():
 
 def get_connection():
     return mc.connect(user='root',
-    password='Odelia.0526',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
@@ -65,6 +65,11 @@ def get_symbol():
     rows = connection.get_rows()
     connection.close()
     return rows[0]
+
+def get_balance():
+    connection = get_connection()
+
+    
 
 # get buy price
 def get_btc_buyprice():
