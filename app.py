@@ -10,8 +10,6 @@ app  = Flask(__name__)
 def login():
     return render_template('login.html')
 
-
-
 @app.route('/')
 def westworld_main():
     symbol = get_symbol()
@@ -41,9 +39,7 @@ def process_order():
     result = connection.cmd_query(sql)
     connection.commit()
     connection.close()
-    return 'order processed'
-
- ## render_template('ordersummary.html')
+    return render_template('ordersummary.html')
 
 #def trade(side, price, current_balance):
   ## Buy = True, Sell = False
