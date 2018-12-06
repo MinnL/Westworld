@@ -23,7 +23,7 @@ def westworld_main():
 @app.route('/ledger')
 def view_ledger():
     connection = get_connection()
-    sql = "select * from symbol,trade where symbol.symbol_id = trade.symbol_id"
+    sql = "select * from trade"
     result = connection.cmd_query(sql)
     rows = connection.get_rows()
     connection.close()
@@ -33,6 +33,7 @@ def view_ledger():
 def process_order():
     qty = request.form['qty']
     symbol = request.form['itemOrdered']
+    # price = request.form []
     connection = get_connection()
     sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
     # i.e insert into orders (quantity, product_id) values (8000,2)
