@@ -56,7 +56,7 @@ def process_order():
 
 def get_connection():
     return mc.connect(user='root',
-    password='jigru8MySQL',
+    password='Odelia.0526',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
