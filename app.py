@@ -36,12 +36,14 @@ def process_order():
     qty = request.form['qty']
     symbol = request.form['itemOrdered']
     connection = get_connection()
-    sql = 'insert into trade (qty,symbol_id) values ('+qty+','+product+')'
+    sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
     # i.e insert into orders (quantity, product_id) values (8000,2)
     result = connection.cmd_query(sql)
     connection.commit()
     connection.close()
-    return render_template('ordersummary.html')
+    return 'order processed'
+
+ ## render_template('ordersummary.html')
 
 #def trade(side, price, current_balance):
   ## Buy = True, Sell = False

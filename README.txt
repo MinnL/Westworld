@@ -34,4 +34,4 @@ create table profit_loss(
     time timestamp
 );
 
-insert into symbol values (1,'BIT'),(2,'ETH'),(3,'LTC')
+insert into symbol values (1,'BTC'),(2,'ETH'),(3,'LTC')
