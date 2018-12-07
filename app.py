@@ -42,6 +42,7 @@ def process_order1():
     elif symbol == 3:
       price = get_ltc_buyprice()
     amount = float(price["amount"])
+    
     balance = balance - (amount * int(qty))
     action = 'buy'
 
@@ -92,9 +93,6 @@ def sell():
     ethsellprice = get_eth_sellprice()
     ltcsellprice = get_ltc_sellprice()
     return render_template('sell.html',stuff=symbol, stuffb=btcsellprice,stuffe=get_eth_sellprice(),stuffl=get_ltc_sellprice())
-
-
-
 
 
 #def trade(side, price, current_balance):
