@@ -33,16 +33,21 @@ def view_ledger():
 def process_order():
     qty = request.form['qty']
     symbol = request.form['itemOrdered']
-    # action = request.form['action']
+    action = request.form['a']
     # initial_balance = 10000000
     # price = request.form []
     connection = get_connection()
     sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
+    
+    
     result = connection.cmd_query(sql)
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
+
+
+
 
 #def trade(side, price, current_balance):
   ## Buy = True, Sell = False
@@ -71,8 +76,8 @@ def get_symbol():
 
 def get_balance():
     connection = get_connection()
+    result = connection.cmd_query("select")
 
-    
 
 # get buy price
 def get_btc_buyprice():
