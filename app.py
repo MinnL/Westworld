@@ -34,7 +34,7 @@ def process_order():
     qty = request.form['qty']
     symbol = request.form['itemOrdered']
     # action = request.form['action']
-    initial_balance = 10000000
+    # initial_balance = 10000000
     # price = request.form []
     connection = get_connection()
     sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
