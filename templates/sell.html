@@ -34,15 +34,15 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="/Users/Ying/Documents/GitHub/Westworld/static/assets/styleguide/bitcoin.png" width="100" alt="Card image cap">
+        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="../static/assets/styleguide/bitcoin.png" width="100" alt="Card image cap">
           <h4> <b>BTC</b><br></h4>
           <h4> <b>${{stuffb.amount}}</b></h4>
         </div>
-        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="/Users/Ying/Documents/GitHub/Westworld/static/assets/styleguide/ethereum.png" width="100" alt="Card image cap">
+        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="../static/assets/styleguide/ethereum.png" width="100" alt="Card image cap">
           <h4> <b>ETH</b></h4>
           <h4> <b>${{stuffe.amount}}</b></h4>
         </div>
-        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="/Users/Ying/Documents/GitHub/Westworld/static/assets/styleguide/litecoin.jpeg" width="100">
+        <div class="col-lg-4 col-6 p-4"> <img class="img-fluid d-block mb-3 mx-auto rounded-circle" src="../static/assets/styleguide/litecoin.jpeg" width="100">
           <h4> <b>LTC</b></h4>
           <h4> <b>${{stuffl.amount}}</b></h4>
         </div>
@@ -59,11 +59,7 @@
                 <div class="col-md-6">
                   <h1 class=""><b>Choose Crypto Currency</b></h1>
                   <div class="btn-group m-2">
-                    <select class="form-control" name="itemOrdered"> 
-                      {% for symbol_id,coin_type in stuff %} 
-                      <option value="{{symbol_id}}">{{coin_type}}</option> 
-                      {% endfor %} 
-                    </select>
+                    <select class="form-control" name="itemOrdered"> {% for symbol_id,coin_type in stuff %} <option value="{{symbol_id}}">{{coin_type}}</option> {% endfor %} </select>
                   </div>
                 </div>
                 <div class="col-md-6">
