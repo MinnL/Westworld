@@ -32,9 +32,7 @@ def view_ledger():
 @app.route('/ordersummary',methods=['POST'])
 def process_order():
     qty = request.form['qty']
-    symbol = request.form['itemOrdered']
-    initial_balance = 1000000
-    
+    symbol = request.form['itemOrdered']    
     # action = request.form['a']
     # price = request.form []
     connection = get_connection()
@@ -76,6 +74,9 @@ def sell():
 #    transaction = transaction + "," + str(current_balance) + '\n'
 #    ledger.write(transaction)
 #    return current_balance
+
+def get_initial_balance();
+    return 1000000
 
 def get_connection():
     return mc.connect(user='root',
