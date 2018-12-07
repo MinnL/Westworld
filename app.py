@@ -10,6 +10,10 @@ app  = Flask(__name__)
 def login():
     return render_template('login.html')
 
+@app.route('/notenoughmoney')
+def notenoughoney():
+  return render_template('notenoughmoney')
+
 @app.route('/')
 def westworld_main():
     symbol = get_symbol()
