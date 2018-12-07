@@ -102,8 +102,10 @@
   <div class="py-5">
     <div class="container">
       <div class="row">
-        <div class="col-md-6"><a class="btn btn-primary" href="#">BUY</a></div>
-        <div class="col-md-6"><a class="btn btn-primary" href="#">SELL</a></div>
+@app.route('/sell',methods=['POST'])
+@app.route('/sell',methods=['POST'])
+        <div class="col-md-6"><a class="btn btn-primary" href="/buy">BUY</a></div>
+        <div class="col-md-6"><a class="btn btn-primary" href="/sell">SELL</a></div>
       </div>
     </div>
   </div>
