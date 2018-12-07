@@ -33,14 +33,14 @@ def view_ledger():
 def process_order():
     qty = request.form['qty']
     symbol = request.form['itemOrdered']
-    action = request.form['a']
-    # initial_balance = 10000000
+    initial_balance = 1000000
+    
+    # action = request.form['a']
     # price = request.form []
     connection = get_connection()
     sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
-    
-    
+
     result = connection.cmd_query(sql)
     connection.commit()
     connection.close()
@@ -48,15 +48,21 @@ def process_order():
 
 @app.route('/buy')
 def buy():
-  symbol = get_symbol()
-  btcspotprice = get_btc_spotprice()
-  ethspotprice = get_eth_spotprice()
-  ltcspotprice = get_ltc_spotprice()
-  return render_template('buy.html',stuff=symbol, stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
+    symbol = get_symbol()
+    btcbuyprice = get_btc_buyprice()
+    ethbuyprice = get_eth_buyprice()
+    ltcbuyprice = get_ltc_buyprice()
+    return render_template('buy.html',stuff=symbol, stuffb=btcbuyprice,stuffe=get_eth_buyprice(),stuffl=get_ltc_buyprice())
 
 @app.route('/sell')
 def sell():
-    return render_template('sell.html',stuff=symbol)
+    symbol = get_symbol()
+    btcsellprice = get_btc_sellprice()
+    ethsellprice = get_eth_sellprice()
+    ltcsellprice = get_ltc_sellprice()
+    return render_template('sell.html',stuff=symbol, stuffb=btcsellprice,stuffe=get_eth_sellprice(),stuffl=get_ltc_sellprice())
+
+
 
 
 
