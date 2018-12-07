@@ -42,16 +42,20 @@ def process_order1():
     elif symbol == 3:
       price = get_ltc_buyprice()
     amount = float(price["amount"])
-    
-    balance = balance - (amount * int(qty))
-    action = 'buy'
 
-      
-    sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
+    total_price = amount * int(qty)
+
+    if total_price <= balance:
+      balance = balance - (amount * int(qty))
+      action = 'buy'
+      sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
-    result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
-    connection.commit()
-    connection.close()
+      result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+      connection.commit()
+      connection.close()
+    else:
+      return "Not enough money"
+    
     return render_template('ordersummary.html')
 
 @app.route('/ordersummary2',methods=['POST'])
@@ -180,5 +184,4 @@ def get_ltc_spotprice():
 if __name__ == "__main__":
   app.run(debug=True)
     
-
 
