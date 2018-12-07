@@ -46,6 +46,15 @@ def process_order():
     connection.close()
     return render_template('ordersummary.html')
 
+@app.route('/buy')
+def buy():
+    return render_template('buy.html')
+
+@app.route('/sell')
+def sell():
+    return render_template('sell.html')
+
+
 
 
 
