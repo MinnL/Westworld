@@ -15,11 +15,10 @@ create table trade (
     action varchar(4),
     qty int,
     price decimal(12,2),
-    time timestamp,
+    time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     balance decimal(12,2),
     primary key(trade_id) 
 );
-
 create table symbol (
 	symbol_id int ,
     coin_type char(3)
@@ -32,7 +31,7 @@ create table profit_loss(
     VWAP decimal (12,2),
     RPL  decimal (12,2),
     URPL decimal (12,2),
-    time timestamp,
+    time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     primary key(PL_id)
 );
 
