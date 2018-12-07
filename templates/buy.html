@@ -59,7 +59,11 @@
                 <div class="col-md-6">
                   <h1 class=""><b>Choose Crypto Currency</b></h1>
                   <div class="btn-group m-2">
-                    <select class="form-control" name="itemOrdered"> {% for symbol_id,coin_type in stuff %} <option value="{{symbol_id}}">{{coin_type}}</option> {% endfor %} </select>
+                    <select class="form-control" name="itemOrdered"> 
+                      {% for symbol_id,coin_type in stuff %} 
+                      <option value="{{symbol_id}}">{{coin_type}}</option> 
+                      {% endfor %} 
+                    </select>
                   </div>
                 </div>
                 <div class="col-md-6">
