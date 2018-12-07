@@ -10,13 +10,12 @@ Please type in the following in MYSQl to create a database and tables.
 create database westworld;
 use westworld;
 create table trade (
-	trade_id int not null auto_increment,
+    trade_id int not null auto_increment,
     symbol_id int,
     action varchar(4),
     qty int,
     price decimal(12,2),
     time timestamp,
-    inventory int,
     balance decimal(12,2),
     primary key(trade_id) 
 );
@@ -27,9 +26,9 @@ create table symbol (
 );
 
 create table profit_loss(
-	PL_id int not null auto_increment,
+    PL_id int not null auto_increment,
     symbol_id int,
-    qty int,
+    inventory int,
     VWAP decimal (12,2),
     RPL  decimal (12,2),
     URPL decimal (12,2),
