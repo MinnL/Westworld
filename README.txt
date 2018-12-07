@@ -36,4 +36,8 @@ create table profit_loss(
     primary key(PL_id)
 );
 
+insert into profit_loss (symbol_id,inventory,VWAP,RPL,URPL) values (1,0,0,0,0);
+insert into profit_loss (symbol_id,inventory,VWAP,RPL,URPL) values (2,0,0,0,0);
+insert into profit_loss (symbol_id,inventory,VWAP,RPL,URPL) values (3,0,0,0,0);
+
 insert into symbol values (1,'BTC'),(2,'ETH'),(3,'LTC')
