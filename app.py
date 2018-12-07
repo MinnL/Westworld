@@ -29,14 +29,36 @@ def view_ledger():
     connection.close()
     return render_template('ledger.html', ledgers=rows[0])
 
-@app.route('/ordersummary',methods=['POST'])
-def process_order():
+@app.route('/ordersummary1',methods=['POST'])
+def process_order1():
+    connection = get_connection()
     qty = request.form['qty']
-    symbol = request.form['itemOrdered']    
+    symbol = request.form['itemOrdered']
+    balance = get_initial_balance()
+    if symbol == 1:
+      price = get_btc_buyprice()
+    elif symbol == 2:
+      price = get_eth_buyprice()
+    elif symbol == 3:
+      price = get_ltc_buyprice()
+
+    sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
+    # i.e insert into orders (quantity, symbol_id) values (8000,2)
+    result = connection.cmd_query(sql)
+    connection.commit()
+    connection.close()
+    return render_template('ordersummary.html')
+
+@app.route('/ordersummary2',methods=['POST'])
+def process_order2():
+    qty = request.form['qty']
+    symbol = request.form['itemOrdered']
+    balance = get_initial_balance()
+    action = 'sell'
     # action = request.form['a']
     # price = request.form []
     connection = get_connection()
-    sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
+    sql = 'insert into trade (qty,symbol_id,action) values ('+qty+','+symbol+','+action+')'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
 
     result = connection.cmd_query(sql)
@@ -75,12 +97,12 @@ def sell():
 #    ledger.write(transaction)
 #    return current_balance
 
-def get_initial_balance();
+def get_initial_balance():
     return 1000000
 
 def get_connection():
     return mc.connect(user='root',
-    password='Odelia.0526',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
