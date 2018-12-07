@@ -46,6 +46,17 @@ def process_order():
     connection.close()
     return render_template('ordersummary.html')
 
+@app.route('/buy')
+def buy():
+  symbol = get_symbol()
+  btcspotprice = get_btc_spotprice()
+  ethspotprice = get_eth_spotprice()
+  ltcspotprice = get_ltc_spotprice()
+  return render_template('buy.html',stuff=symbol, stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
+
+@app.route('/sell')
+def sell():
+    return render_template('sell.html',stuff=symbol)
 
 
 
@@ -62,7 +73,7 @@ def process_order():
 
 def get_connection():
     return mc.connect(user='root',
-    password='jigru8MySQL',
+    password='Odelia.0526',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
