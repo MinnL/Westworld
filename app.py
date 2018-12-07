@@ -23,7 +23,7 @@ def westworld_main():
 @app.route('/ledger')
 def view_ledger():
     connection = get_connection()
-    sql = "select * from trade"
+    sql = "select * from trade order by trade_id desc"
     result = connection.cmd_query(sql)
     rows = connection.get_rows()
     connection.close()
@@ -33,35 +33,46 @@ def view_ledger():
 def process_order1():
     connection = get_connection()
     qty = request.form['qty']
-    symbol = request.form['itemOrdered']
-    balance = get_initial_balance()
+    symbol = request.form.get('itemOrdered',type=int)
+    balance = get_balance()
     if symbol == 1:
       price = get_btc_buyprice()
     elif symbol == 2:
       price = get_eth_buyprice()
     elif symbol == 3:
       price = get_ltc_buyprice()
+    amount = float(price["amount"])
+    balance = balance - (amount * int(qty))
+    action = 'buy'
 
-    sql = 'insert into trade (qty,symbol_id) values ('+qty+','+symbol+')'
+      
+    sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
-    result = connection.cmd_query(sql)
+    result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
 
 @app.route('/ordersummary2',methods=['POST'])
 def process_order2():
-    qty = request.form['qty']
-    symbol = request.form['itemOrdered']
-    balance = get_initial_balance()
-    action = 'sell'
-    # action = request.form['a']
-    # price = request.form []
     connection = get_connection()
-    sql = 'insert into trade (qty,symbol_id,action) values ('+qty+','+symbol+','+action+')'
-    # i.e insert into orders (quantity, symbol_id) values (8000,2)
+    qty = request.form['qty']
+    symbol = request.form.get('itemOrdered',type=int)
+    balance = get_balance()
+    if symbol == 1:
+      price = get_btc_sellprice()
+    elif symbol == 2:
+      price = get_eth_sellprice()
+    elif symbol == 3:
+      price = get_ltc_sellprice()
+    amount = float(price["amount"])
+    balance = balance + (amount * int(qty))
+    action = 'sell'
 
-    result = connection.cmd_query(sql)
+
+    sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
+    # i.e insert into orders (quantity, symbol_id) values (8000,2)
+    result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
@@ -97,8 +108,6 @@ def sell():
 #    ledger.write(transaction)
 #    return current_balance
 
-def get_initial_balance():
-    return 1000000
 
 def get_connection():
     return mc.connect(user='root',
@@ -116,7 +125,10 @@ def get_symbol():
 
 def get_balance():
     connection = get_connection()
-    result = connection.cmd_query("select")
+    cursor = connection.cursor()
+    cursor.execute("select balance from trade ORDER BY trade_id DESC LIMIT 1")
+    result = cursor.fetchone()
+    return float(result[0] if result else 10000)
 
 
 # get buy price
