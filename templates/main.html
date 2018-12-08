@@ -54,7 +54,14 @@
                 </tr>
               </thead>
               <tbody>
+                {% for v in pl %}
                 <tr>
+                    <td>{{v[1]}}</td>
+                    <td>{{v[2]}}</td>
+                    <td>{{v[3]}}</td>
+                </tr>
+                {% endfor %}
+                <!-- <tr>
                   <td>BTC</td>
                   <td>xx</td>
                   <td>$$</td>
@@ -68,7 +75,7 @@
                   <td>LTC</td>
                   <td>xx</td>
                   <td>$$</td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>

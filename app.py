@@ -20,11 +20,22 @@ def notenoughinventory():
 
 @app.route('/')
 def westworld_main():
+    # connection = get_connection()
+    # sql = "select * from trade order by trade_id desc"
+    # result = connection.cmd_query(sql)
+    # rows = connection.get_rows()
+    # connection.close()
+    # return render_template('ledger.html', ledgers=rows[0])
+    connection = get_connection()
+    sql = "select * from profit_loss"
+    reseult = connection.cmd_query(sql)
+    rows = connection.get_rows()
+    connection.close()
     symbol = get_symbol()
     btcspotprice = get_btc_spotprice()
     ethspotprice = get_eth_spotprice()
     ltcspotprice = get_ltc_spotprice()
-    return render_template('main.html',stuff=symbol, stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
+    return render_template('main.html',pl=rows[0],stuff=symbol, stuffb=btcspotprice,stuffe=get_eth_spotprice(),stuffl=get_ltc_spotprice())
 
 @app.route('/graphs')
 
@@ -142,7 +153,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
