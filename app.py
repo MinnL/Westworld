@@ -69,15 +69,17 @@ def process_order1():
         action = 'buy'
         sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
-        result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+        # result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+        # sql_PL = 'update profit_loss SET inventory = '
+        
         connection.commit()
         connection.close()
     else:
         return "Not enough money"
-    sql_pl = 'Update profit_loss Set symbol_id=%s inventory=%s Where symbol_id=%s'
-    result_pl = connection.cursor().execute(sql_profit_loss, (qty, symbol))
-    connection.commit()
-    connection.close()
+    # sql_pl = 'Update profit_loss Set symbol_id=%s inventory=%s Where symbol_id=%s'
+    # result_pl = connection.cursor().execute(sql_profit_loss, (qty, symbol))
+    # connection.commit()
+    # connection.close()
     return render_template('ordersummary.html')
 
 @app.route('/ordersummary2',methods=['POST'])
@@ -135,7 +137,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='jigru8MySQL',
+    password='Odelia.0526',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
