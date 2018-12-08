@@ -12,7 +12,7 @@ def login():
 
 @app.route('/notenoughmoney')
 def notenoughoney():
-  return render_template('notenoughmoney')
+  return render_template('notenoughmoney.html')
 
 @app.route('/')
 def westworld_main():
@@ -73,13 +73,13 @@ def process_order1():
         # sql_PL = 'update profit_loss SET inventory = '
         
         connection.commit()
-        connection.close()
     else:
-        return "Not enough money"
-    # sql_pl = 'Update profit_loss Set symbol_id=%s inventory=%s Where symbol_id=%s'
-    # result_pl = connection.cursor().execute(sql_profit_loss, (qty, symbol))
-    # connection.commit()
-    # connection.close()
+        connection.close()
+        return "notenoughmoney.html"
+    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= %s Where symbol_id=%s'
+    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
+    connection.commit()
+    connection.close()
     return render_template('ordersummary.html')
 
 @app.route('/ordersummary2',methods=['POST'])
