@@ -57,11 +57,15 @@ def process_order1():
     balance = get_balance()
     if symbol == 1:
       price = get_btc_buyprice()
+      mprice = get_btc_spotprice()
     elif symbol == 2:
       price = get_eth_buyprice()
+      mprice = get_eth_spotprice()
     elif symbol == 3:
       price = get_ltc_buyprice()
+      mprice = get_ltc_spotprice()
     amount = float(price["amount"])
+    mprice = float(mprice["amount"])
     total_price = amount * int(qty)
     if total_price <= balance:
       balance = balance - (amount * int(qty))
@@ -72,17 +76,23 @@ def process_order1():
     else:
       connection.close()
       return render_template('notenoughmoney.html')
-    
 
+    #for profit_loss table
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
     vwap1 = (total_price + inventory * cvwap)/ (inventory + int(qty))
-
-
-
+    
     sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s, vwap= %s  Where symbol_id=%s'
     result_pl = connection.cursor().execute(sql_pl, (symbol, qty, vwap1, symbol))
     connection.commit()
+
+    #for graph table
+    RPL = 0
+    UPL = (mprice - vwap1) * (inventory+int(qty))
+    sql_graph = 'insert into graph (symbol_id,RPL,URPL) values (%s, %s, %s)'
+    result_graph = connection.cursor().execute(sql_graph, (symbol, RPL, UPL))
+    connection.commit()
+
     connection.close()
     return render_template('ordersummary.html')
 
@@ -94,18 +104,24 @@ def process_order2():
     balance = get_balance()
     if symbol == 1:
       price = get_btc_sellprice()
+      mprice = get_btc_spotprice()
     elif symbol == 2:
       price = get_eth_sellprice()
+      mprice = get_eth_spotprice()
     elif symbol == 3:
       price = get_ltc_sellprice()
+      mprice = get_ltc_spotprice()
     
     amount = float(price["amount"])
+    mprice = float(mprice["amount"])
     balance = balance + (amount * int(qty))
     action ='sell'
     sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
     result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
-    
+
+
+    #for profit_loss table
     inventory = get_inventory(symbol)
     if inventory <= int(qty):
       return render_template('notenoughinventory.html')
@@ -113,6 +129,15 @@ def process_order2():
       sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s Where symbol_id=%s'
       result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
       connection.commit()
+    
+    cvwap = get_vwap(symbol)
+
+     #for graph table
+    RPL = (amount - cvwap) * int(qty)
+    UPL = (mprice - cvwap) * (inventory - int(qty))
+    sql_graph = 'insert into graph (symbol_id, RPL, URPL) values (%s, %s, %s)'
+    result = connection.cursor().execute(sql_graph, (symbol, RPL, UPL))
+    connection.commit()
 
     # if int(qty) <= inventory:
     #   balance = balance + (amount * int(qty))
