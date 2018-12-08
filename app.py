@@ -160,11 +160,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-<<<<<<< HEAD
-    password='Odelia.0526',
-=======
     password='',
->>>>>>> 60b61ccfcfb8e9b6d0fc104d6be719f1f0d7641d
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
