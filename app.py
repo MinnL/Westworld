@@ -153,7 +153,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='jigru8MySQL',
+    password='',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
