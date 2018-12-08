@@ -109,7 +109,7 @@ def process_order2():
     result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
     
     inventory = get_inventory(symbol)
-    if inventory <= int(qty):
+    if inventory < int(qty):
       return render_template('notenoughinventory.html')
     else:
       sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s Where symbol_id=%s'
