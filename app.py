@@ -37,6 +37,7 @@ def view_ledger():
 def process_order1():
     connection = get_connection()
     qty = request.form['qty']
+    
     symbol = request.form.get('itemOrdered',type=int)
     balance = get_balance()
     if symbol == 1:
@@ -46,28 +47,18 @@ def process_order1():
     elif symbol == 3:
       price = get_ltc_buyprice()
     amount = float(price["amount"])
-    
     total_price = amount * int(qty)
     if total_price <= balance:
       balance = balance - (amount * int(qty))
       action = 'buy'
       sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
       result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
-    # i.e insert into orders (quantity, symbol_id) values (8000,2)
-        # result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
-        # sql_PL = 'update profit_loss SET inventory = '
-        
       connection.commit()
-        
     else:
       connection.close()
       return render_template('notenoughmoney.html')
-    
-    
-  
-    
-    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= %s Where symbol_id=%s'
-    result_pl = connection.cursor().execute(sql_pl, (symbol, inventory, symbol))
+    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s Where symbol_id=%s'
+    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
@@ -87,7 +78,6 @@ def process_order2():
     amount = float(price["amount"])
     balance = balance + (amount * int(qty))
     action = 'sell'
-
 
     sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
@@ -127,7 +117,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='Odelia.0526',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
@@ -146,6 +136,10 @@ def get_balance():
     result = cursor.fetchone()
     return float(result[0] if result else 10000)
 
+def get_inventory():
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("select inventory from profit_loss where ")
 
 # get buy price
 def get_btc_buyprice():
