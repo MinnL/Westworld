@@ -73,6 +73,7 @@ def process_order1():
       connection.close()
       return render_template('notenoughmoney.html')
     
+
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
     vwamp1 = (total_price + inventory * cvwap)/ (inventory * int(qty))
@@ -160,7 +161,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='',
+    password='Odelia.0526',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
