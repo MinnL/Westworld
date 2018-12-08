@@ -76,6 +76,7 @@ def process_order2():
       price = get_eth_sellprice()
     elif symbol == 3:
       price = get_ltc_sellprice()
+    
     amount = float(price["amount"])
     balance = balance + (amount * int(qty))
     action = 'sell'
@@ -83,6 +84,15 @@ def process_order2():
     sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
     result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+    
+    inventory = get_inventory(symbol)
+    if inventory <= 0:
+      return "no shorting"
+    else:
+      sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s Where symbol_id=%s'
+      result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
+      connection.commit()
+
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
@@ -137,10 +147,12 @@ def get_balance():
     result = cursor.fetchone()
     return float(result[0] if result else 10000)
 
-def get_inventory():
+def get_inventory(x):
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute("select inventory from profit_loss where ")
+    cursor.execute("select inventory from profit_loss where symbol_id = %s", (x,))
+    result = cursor.fetchone()
+    return int(result[0])
 
 # get buy price
 def get_btc_buyprice():
