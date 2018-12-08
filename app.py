@@ -6,6 +6,10 @@ import mysql.connector as mc
 
 app  = Flask(__name__)
 
+@app.route('/testindex')
+def testindex():
+  return render_template('testindex.html')
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -57,11 +61,15 @@ def process_order1():
     balance = get_balance()
     if symbol == 1:
       price = get_btc_buyprice()
+      mprice = get_btc_spotprice()
     elif symbol == 2:
       price = get_eth_buyprice()
+      mprice = get_eth_spotprice()
     elif symbol == 3:
       price = get_ltc_buyprice()
+      mprice = get_ltc_spotprice()
     amount = float(price["amount"])
+    mprice = float(mprice["amount"])
     total_price = amount * int(qty)
     if total_price <= balance:
       balance = balance - (amount * int(qty))
@@ -73,16 +81,24 @@ def process_order1():
       connection.close()
       return render_template('notenoughmoney.html')
     
-
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
     vwap1 = (total_price + inventory * cvwap)/ (inventory + int(qty))
+    RPL = 0
+    UPL = (mprice - vwap1) * (inventory+int(qty))
 
-
-    # Profit/Loss
-    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s, vwap= %s  Where symbol_id=%s'
-    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, vwap1, symbol))
+    #for graph table
+    sql_graph = 'insert into graph (symbol_id,RPL,URPL) values (%s, %s, %s)'
+    result_graph = connection.cursor().execute(sql_graph, (symbol, RPL, UPL))
     connection.commit()
+
+    #for profit_loss table
+    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s, vwap= %s, RPL =RPL+ %s, URPL=%s  Where symbol_id=%s'
+    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, vwap1,RPL,UPL, symbol))
+    connection.commit()
+
+    
+
     connection.close()
     return render_template('ordersummary.html')
 
@@ -94,27 +110,49 @@ def process_order2():
     balance = get_balance()
     if symbol == 1:
       price = get_btc_sellprice()
+      mprice = get_btc_spotprice()
     elif symbol == 2:
       price = get_eth_sellprice()
+      mprice = get_eth_spotprice()
     elif symbol == 3:
       price = get_ltc_sellprice()
+      mprice = get_ltc_spotprice()
     
 
 
     amount = float(price["amount"])
+    mprice = float(mprice["amount"])
     balance = balance + (amount * int(qty))
     action ='sell'
     sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
     result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
-    
+
+   
     inventory = get_inventory(symbol)
+    cvwap = get_vwap(symbol)
+    RPL = (amount - cvwap) * int(qty)
+    UPL = (mprice - cvwap) * (inventory - int(qty))
+
+     #for profit_loss table
     if inventory < int(qty):
       return render_template('notenoughinventory.html')
     else:
-      sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s Where symbol_id=%s'
-      result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
+      sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s, RPL =RPL+ %s, URPL=%s Where symbol_id=%s'
+      result_pl = connection.cursor().execute(sql_pl, (symbol, qty, RPL, UPL, symbol))
       connection.commit()
+      
+
+     #for graph table
+    sql_graph = 'insert into graph (symbol_id, RPL, URPL) values (%s, %s, %s)'
+    result = connection.cursor().execute(sql_graph, (symbol, RPL, UPL))
+    connection.commit()
+
+ 
+    
+    
+
+    
 
     # if int(qty) <= inventory:
     #   balance = balance + (amount * int(qty))
