@@ -187,6 +187,13 @@ def get_inventory(x):
     result = cursor.fetchone()
     return int(result[0])
 
+def get_vwap(x):
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("select vwap from profit_loss where symbol_id = %s", (x,))
+    result = cursor.fetchone()
+    return int(result[0])
+
 
 # get buy price
 def get_btc_buyprice():
