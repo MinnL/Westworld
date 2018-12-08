@@ -72,8 +72,14 @@ def process_order1():
     else:
       connection.close()
       return render_template('notenoughmoney.html')
-    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s Where symbol_id=%s'
-    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
+
+    inventory = get_inventory(symbol)
+    cvwap = get_vwap(symbol)
+    VWAP1 = (total_price+ inventory * cvwap)/(inventory +int(qty) )
+
+    # Profit/Loss
+    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s, vwap=%s Where symbol_id=%s'
+    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, VWAP1, symbol))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
@@ -99,7 +105,7 @@ def process_order2():
     result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
     
     inventory = get_inventory(symbol)
-    if inventory <= 0:
+    if inventory <= int(qty):
       return "no shorting"
     else:
       sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s Where symbol_id=%s'
@@ -153,7 +159,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
@@ -176,6 +182,13 @@ def get_inventory(x):
     connection = get_connection()
     cursor = connection.cursor()
     cursor.execute("select inventory from profit_loss where symbol_id = %s", (x,))
+    result = cursor.fetchone()
+    return int(result[0] if result else 0)
+
+def get_vwap(x):
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("select vwap from profit_loss where symbol_id = %s",(x,))
     result = cursor.fetchone()
     return int(result[0])
 
