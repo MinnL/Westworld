@@ -65,18 +65,19 @@ def process_order1():
     # connection.close()
     total_price = amount * int(qty)
     if total_price <= balance:
-        balance = balance - (amount * int(qty))
-        action = 'buy'
-        sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
-        result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+      balance = balance - (amount * int(qty))
+      action = 'buy'
+      sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
+      result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
         # result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
         # sql_PL = 'update profit_loss SET inventory = '
         
-        connection.commit()
-        connection.close()
+      connection.commit()
+        
     else:
-        return render_template('notenoughmoney.html')
+      connection.close()
+      return render_template('notenoughmoney.html')
     sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= %s Where symbol_id=%s'
     result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
     connection.commit()
