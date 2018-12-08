@@ -10,6 +10,16 @@ app  = Flask(__name__)
 def login():
     return render_template('login.html')
 
+@app.route('/RPL')
+def RPL():
+    return render_template('RPL.html')
+
+@app.route('/UPL')
+def UPL():
+    return render_template('UPL.html')
+  
+
+
 @app.route('/notenoughmoney')
 def notenoughoney():
   return render_template('notenoughmoney.html')
