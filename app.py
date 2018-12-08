@@ -14,6 +14,10 @@ def login():
 def notenoughoney():
   return render_template('notenoughmoney.html')
 
+@app.route('/notenoughinventory')
+def notenoughinventory():
+  return render_template('notenoughinventory.html')
+
 @app.route('/')
 def westworld_main():
     symbol = get_symbol()
@@ -47,7 +51,6 @@ def process_order1():
     elif symbol == 3:
       price = get_ltc_buyprice()
     amount = float(price["amount"])
-
     total_price = amount * int(qty)
     if total_price <= balance:
       balance = balance - (amount * int(qty))
@@ -79,8 +82,7 @@ def process_order2():
     
     amount = float(price["amount"])
     balance = balance + (amount * int(qty))
-    action = 'sell'
-
+    action ='sell'
     sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
     result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
@@ -93,9 +95,21 @@ def process_order2():
       result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
       connection.commit()
 
+    # if int(qty) <= inventory:
+    #   balance = balance + (amount * int(qty))
+    #   action = 'sell'
+    #   sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
+    #   result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+    #   connection.commit()
+    # else:
+    #   connection.close()
+    #   return render_template('notenoughinventory.html')
+    # sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s Where symbol_id=%s'
+    # result_pl = connection.cursor().execute(sql_pl, (symbol, -qty, symbol))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
+
 
 @app.route('/buy')
 def buy():
@@ -153,6 +167,29 @@ def get_inventory(x):
     cursor.execute("select inventory from profit_loss where symbol_id = %s", (x,))
     result = cursor.fetchone()
     return int(result[0])
+
+# def get_binventory():
+#     connection = get_connection()
+#     cursor = connection.cursor()
+#     cursor.execute("select inventory from profit_loss where symbol_id = 1")
+#     result = cursor.fetchone()
+#     return int(result[0] if result else 10000)
+
+# def get_einventory():
+#     connection = get_connection()
+#     cursor = connection.cursor()
+#     cursor.execute("select inventory from profit_loss where symbol_id = 2")
+#     result = cursor.fetchone()
+#     return int(result[0] if result else 10000)
+
+# def get_linventory():
+#     connection = get_connection()
+#     cursor = connection.cursor()
+#     cursor.execute("select inventory from profit_loss where symbol_id = 3")
+#     result = cursor.fetchone()
+#     return int(result[0] if result else 10000)
+
+
 
 # get buy price
 def get_btc_buyprice():
