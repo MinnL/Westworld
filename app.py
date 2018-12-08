@@ -160,7 +160,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
@@ -184,8 +184,14 @@ def get_inventory(x):
     cursor = connection.cursor()
     cursor.execute("select inventory from profit_loss where symbol_id = %s", (x,))
     result = cursor.fetchone()
-    return int(result[0])
+    return int(result[0] if result else 0)
 
+def get_vwap(x):
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("select vwap from profit_loss where symbol_id = %s", (x,))
+    result = cursor.fetchone()
+    return int(result[0])
 
 # get buy price
 def get_btc_buyprice():
