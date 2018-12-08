@@ -76,10 +76,10 @@ def process_order1():
 
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
-    vwap1 = (total_price + inventory * cvwap)/ (inventory * int(qty))
+    vwap1 = (total_price + inventory * cvwap)/ (inventory + int(qty))
 
 
-
+    # Profit/Loss
     sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s, vwap= %s  Where symbol_id=%s'
     result_pl = connection.cursor().execute(sql_pl, (symbol, qty, vwap1, symbol))
     connection.commit()
@@ -99,6 +99,8 @@ def process_order2():
     elif symbol == 3:
       price = get_ltc_sellprice()
     
+
+
     amount = float(price["amount"])
     balance = balance + (amount * int(qty))
     action ='sell'
@@ -161,7 +163,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
