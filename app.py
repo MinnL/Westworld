@@ -73,7 +73,7 @@ def process_order1():
         connection.commit()
     else:
         connection.close()
-        return "notenoughmoney.html"
+        return render_template('notenoughmoney.html')
     sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= %s Where symbol_id=%s'
     result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
     connection.commit()
