@@ -76,12 +76,12 @@ def process_order1():
 
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
-    vwamp1 = (total_price + inventory * cvwap)/ (inventory * int(qty))
+    vwap1 = (total_price + inventory * cvwap)/ (inventory * int(qty))
 
 
 
-    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s Where symbol_id=%s'
-    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
+    sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s, vwap= %s  Where symbol_id=%s'
+    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, vwap1, symbol))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
@@ -161,11 +161,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-<<<<<<< HEAD
-    password='jigru8MySQL',
-=======
-    password='Odelia.0526',
->>>>>>> 6f3e85d4068cb3eb6a60d677749b5381a7011550
+    password='',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
