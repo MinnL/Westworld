@@ -6,13 +6,24 @@ import mysql.connector as mc
 
 app  = Flask(__name__)
 
-@app.route('/testindex')
-def testindex():
-  return render_template('testindex.html')
-
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+@app.route('/RPL')
+def RPL():
+    return render_template('RPL.html')
+
+@app.route('/UPL')
+def UPL():
+    connection = get_connection()
+    sql = "select trade_id , URPL from trade"
+    result = connection.cmd_query(sql)
+
+    
+    return render_template('UPL.html')
+  
+
 
 @app.route('/notenoughmoney')
 def notenoughoney():
