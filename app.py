@@ -69,7 +69,9 @@ def process_order1():
         action = 'buy'
         sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
-        result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+        # result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
+        # sql_PL = 'update profit_loss SET inventory = '
+        
         connection.commit()
     else:
         connection.close()
@@ -135,7 +137,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='Thalassa850520',
+    password='Odelia.0526',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
