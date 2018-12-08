@@ -46,23 +46,7 @@ def process_order1():
     elif symbol == 3:
       price = get_ltc_buyprice()
     amount = float(price["amount"])
-    # balance = balance - (amount * int(qty))
-    # if balance >= amount * int(qty):
-    #    balance = balance - (amount * int(qty))
-    # else:   
-    # action = 'buy'
-    # sql_trade = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
-    # sql_pl = 'Update profit_loss Set symbol_id=%s inventory=%s Where symbol_id=%s'
-    #  cursor.execute("""
-    #    UPDATE tblTableName
-    #    SET Year=%s, Month=%s, Day=%s, Hour=%s, Minute=%s
-    #    WHERE Server=%s
-    # """, (Year, Month, Day, Hour, Minute, ServerID))
-    # i.e insert into orders (quantity, symbol_id) values (8000,2)
-    # result_trade = connection.cursor().execute(sql_trade, (qty, symbol, amount, balance, action))
-    # result_pl = connection.cursor().execute(sql_profit_loss, (qty, symbol))
-    # connection.commit()
-    # connection.close()
+    
     total_price = amount * int(qty)
     if total_price <= balance:
       balance = balance - (amount * int(qty))
@@ -78,8 +62,12 @@ def process_order1():
     else:
       connection.close()
       return render_template('notenoughmoney.html')
+    
+    
+  
+    
     sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= %s Where symbol_id=%s'
-    result_pl = connection.cursor().execute(sql_pl, (symbol, qty, symbol))
+    result_pl = connection.cursor().execute(sql_pl, (symbol, inventory, symbol))
     connection.commit()
     connection.close()
     return render_template('ordersummary.html')
