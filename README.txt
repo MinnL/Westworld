@@ -13,7 +13,7 @@ create table trade (
     trade_id int not null auto_increment,
     symbol_id int,
     action varchar(4),
-    qty int,
+    qty decimal12,2),
     price decimal(12,2),
     time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     balance decimal(12,2),
