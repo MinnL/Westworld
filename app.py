@@ -10,13 +10,13 @@ app  = Flask(__name__)
 def login():
     return render_template('login.html')
 
-@app.route('/RPL')
-def RPL():
-    return render_template('RPL.html')
+# @app.route('/RPL')
+# def RPL():
+#     return render_template('RPL.html')
 
-@app.route('/UPL')
-def UPL():
-    return render_template('UPL.html')
+# @app.route('/UPL')
+# def UPL():
+#     return render_template('UPL.html')
   
 
 
@@ -76,9 +76,9 @@ def process_order1():
       mprice = get_ltc_spotprice()
     amount = float(price["amount"])
     mprice = float(mprice["amount"])
-    total_price = amount * int(qty)
+    total_price = amount * float(qty)
     if total_price <= balance:
-      balance = balance - (amount * int(qty))
+      balance = balance - (amount * float(qty))
       action = 'buy'
       sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
       result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
@@ -89,9 +89,9 @@ def process_order1():
     
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
-    vwap1 = (total_price + inventory * cvwap)/ (inventory + int(qty))
+    vwap1 = (total_price + inventory * cvwap)/ (inventory + float(qty))
     RPL = 0
-    UPL = (mprice - vwap1) * (inventory+int(qty))
+    UPL = (mprice - vwap1) * (inventory+float(qty))
 
     #for graph table
     sql_graph = 'insert into graph (symbol_id,RPL,URPL) values (%s, %s, %s)'
@@ -126,7 +126,7 @@ def process_order2():
     
     amount = float(price["amount"])
     mprice = float(mprice["amount"])
-    balance = balance + (amount * int(qty))
+    balance = balance + (amount * float(qty))
     action ='sell'
     sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
     # i.e insert into orders (quantity, symbol_id) values (8000,2)
@@ -135,11 +135,11 @@ def process_order2():
    
     inventory = get_inventory(symbol)
     cvwap = get_vwap(symbol)
-    RPL = (amount - cvwap) * int(qty)
-    UPL = (mprice - cvwap) * (inventory - int(qty))
+    RPL = (amount - cvwap) * float(qty)
+    UPL = (mprice - cvwap) * (inventory - float(qty))
 
      #for profit_loss table
-    if inventory < int(qty):
+    if inventory < float(qty):
       return render_template('notenoughinventory.html')
     else:
       sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory-%s, RPL =RPL+ %s, URPL=%s Where symbol_id=%s'
@@ -152,24 +152,7 @@ def process_order2():
     result = connection.cursor().execute(sql_graph, (symbol, RPL, UPL))
     connection.commit()
 
- 
-    
-    
-
-    
-
-    # if int(qty) <= inventory:
-    #   balance = balance + (amount * int(qty))
-    #   action = 'sell'
-    #   sql = 'insert into trade (qty,symbol_id,price,balance,action) values (%s, %s, %s, %s, %s)'
-    #   result = connection.cursor().execute(sql, (qty, symbol, amount, balance, action))
-    #   connection.commit()
-    # else:
-    #   connection.close()
-    #   return render_template('notenoughinventory.html')
-    # sql_pl = 'Update profit_loss Set symbol_id= %s, inventory= inventory+%s Where symbol_id=%s'
-    # result_pl = connection.cursor().execute(sql_pl, (symbol, -qty, symbol))
-    connection.commit()
+  
     connection.close()
     return render_template('ordersummary.html')
 
@@ -190,17 +173,6 @@ def sell():
     ltcsellprice = get_ltc_sellprice()
     return render_template('sell.html',stuff=symbol, stuffb=btcsellprice,stuffe=get_eth_sellprice(),stuffl=get_ltc_sellprice())
 
-
-#def trade(side, price, current_balance):
-  ## Buy = True, Sell = False
-#    transaction = str(current_balance)+","+str(side)+","+str(price)
-#     if side:
-#        current_balance = current_balance - price
-#     else:
-#        current_balance = current_balance + price
-#    transaction = transaction + "," + str(current_balance) + '\n'
-#    ledger.write(transaction)
-#    return current_balance
 
 
 def get_connection():
