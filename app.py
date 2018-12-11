@@ -14,9 +14,14 @@ def login():
 # def RPL():
 #     return render_template('RPL.html')
 
-# @app.route('/UPL')
-# def UPL():
-#     return render_template('UPL.html')
+@app.route('/UPL')
+def UPL():
+    connection = get_connection()
+    sql = "select trade_id , URPL from trade"
+    result = connection.cmd_query(sql)
+
+    
+    return render_template('UPL.html')
   
 
 
@@ -124,6 +129,8 @@ def process_order2():
       price = get_ltc_sellprice()
       mprice = get_ltc_spotprice()
     
+
+
     amount = float(price["amount"])
     mprice = float(mprice["amount"])
     balance = balance + (amount * float(qty))
@@ -177,7 +184,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='Odelia.0526',
+    password='jigru8MySQL',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
