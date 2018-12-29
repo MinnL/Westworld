@@ -5,6 +5,7 @@
 window.onload = function () {
 
 var chart = new CanvasJS.Chart("chartContainer", {
+<<<<<<< HEAD
 	theme:"light2",
 	animationEnabled: true,
 	title:{
@@ -113,6 +114,37 @@ function toggleDataSeries(e) {
 	chart.render();
 }
 
+=======
+	animationEnabled: true,  
+	title:{
+		text: "Music Album Sales by Year"
+	},
+	axisY: {
+		title: "Units Sold",
+		valueFormatString: "#0,,.",
+		suffix: "mn",
+		stripLines: [{
+			value: 3366500,
+			label: "Average"
+		}]
+	},
+	
+	data: [{
+		yValueFormatString: "#,### Units",
+		xValueFormatString: "YYYY",
+		type: "spline",
+		dataPoints: [
+			{x: [{% for x in set x %},
+			"{{x}}", {% end for%}], 
+			
+			y: [{% for y in set y %},
+			"{{7}}", {% end for%}], 
+	
+		]
+	}]
+});
+chart.render();
+>>>>>>> 7b53dee65ac5787c36bdaeb4dcbe36e913c81afb
 }
 </script>
 </head>
@@ -121,4 +153,3 @@ function toggleDataSeries(e) {
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 </html>
-

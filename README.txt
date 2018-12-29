@@ -13,7 +13,7 @@ create table trade (
     trade_id int not null auto_increment,
     symbol_id int,
     action varchar(4),
-    qty int,
+    qty decimal (12,2),
     price decimal(12,2),
     time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     balance decimal(12,2),
@@ -28,7 +28,7 @@ create table symbol (
 create table profit_loss(
     PL_id int not null auto_increment,
     symbol_id int,
-    inventory int,
+    inventorydecimal(12,2),
     VWAP decimal (12,2),
     RPL  decimal (12,2),
     URPL decimal (12,2),
