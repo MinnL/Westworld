@@ -17,11 +17,11 @@ def RPL():
 @app.route('/UPL')
 def UPL():
     connection = get_connection()
-    sql = "select trade_id , URPL from trade"
-    result = connection.cmd_query(sql)
-
-    
-    return render_template('UPL.html')
+    sql_total = "select json_object('x', graph_id, 'y', URPL) from graph"
+    result_total = connection.cmd_query(sql_total)
+    rows = connection.get_rows()
+    connection.close()
+    return render_template('UPL.html', stuff=rows[0])
   
 
 
