@@ -15,22 +15,11 @@ def login():
 # def RPL():
 #     return render_template('RPL.html')
 
-<<<<<<< HEAD
-@app.route('/UPL')
-def UPL():
-    connection = get_connection()
-    sql_total = "select json_object('x', graph_id, 'y', URPL) from graph"
-    result_total = connection.cmd_query(sql_total)
-    rows = connection.get_rows()
-    connection.close()
-    return render_template('UPL.html', stuff=rows[0])
-=======
 # @app.route('/UPL')
 # def UPL():
 #     id = get_id
 #     totalUPL = get_totalUPL
 #     return render_template('UPL.html', x= id, y = totalUPL)
->>>>>>> 7b53dee65ac5787c36bdaeb4dcbe36e913c81afb
   
 
 
@@ -193,7 +182,7 @@ def sell():
 
 def get_connection():
     return mc.connect(user='root',
-    password='Odelia.0526',
+    password='',
     host='127.0.0.1',
     database='westworld',
     auth_plugin='mysql_native_password')
